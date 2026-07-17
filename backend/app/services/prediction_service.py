@@ -1,8 +1,8 @@
 import pandas as pd
 
 from app.core.model_loader import ModelBundle
-from app.schemas import ChurnPredictionResponse, CustomerInput, RiskFactor
-
+from app.schemas.response import ChurnPredictionResponse, RiskFactor
+from app.schemas.request import CustomerInput
 # --- unchanged from the notebook -------------------------------------------
 
 BINARY_COLS = [

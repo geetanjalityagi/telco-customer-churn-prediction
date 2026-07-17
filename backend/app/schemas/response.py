@@ -1,5 +1,5 @@
-from pydantic import BaseModel, Field
-from typing import List
+from pydantic import BaseModel
+from typing import Literal
 
 class RiskFactor(BaseModel):
     feature: str
@@ -8,10 +8,6 @@ class RiskFactor(BaseModel):
     suggestion: str | None = None
 
 class ChurnPredictionResponse(BaseModel):
-    """
-    Field-for-field JSON equivalent of the printed report produced by
-    `explain_prediction()` in 03_Customer_Churn_Prediction.ipynb.
-    """
 
     prediction: Literal["Will Churn", "Will Stay"]
     churn_probability: float

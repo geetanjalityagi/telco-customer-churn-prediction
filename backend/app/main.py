@@ -2,7 +2,7 @@ from fastapi import FastAPI
 
 
 app = FastAPI(
-    title="Predictive Maintenance API",
+    title="Customer Churn API",
     version="1.0.0"
 )
 

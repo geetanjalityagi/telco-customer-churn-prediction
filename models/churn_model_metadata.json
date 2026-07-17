@@ -1,0 +1,36 @@
+{
+  "model_type": "XGBoost (Optuna-tuned) + CalibratedClassifierCV (isotonic, cv=5)",
+  "chosen_threshold": 0.2950982481241226,
+  "target_recall_used_for_threshold": 0.75,
+  "feature_columns": [
+    "SeniorCitizen",
+    "Partner",
+    "Dependents",
+    "tenure",
+    "PhoneService",
+    "MultipleLines",
+    "InternetService",
+    "OnlineSecurity",
+    "OnlineBackup",
+    "DeviceProtection",
+    "TechSupport",
+    "StreamingTV",
+    "StreamingMovies",
+    "Contract",
+    "PaperlessBilling",
+    "PaymentMethod",
+    "MonthlyCharges",
+    "TotalCharges"
+  ],
+  "target_column": "Churn",
+  "target_mapping": {
+    "Yes": 1,
+    "No": 0
+  },
+  "test_performance": {
+    "accuracy": 0.7686832740213523,
+    "macro_f1": 0.7313099716437503,
+    "roc_auc": 0.8420887591210484
+  },
+  "saved_on": "2026-07-17T14:55:15.756455"
+}

@@ -87,23 +87,18 @@ def _join_readable(labels: list[str]) -> str:
 
 
 def explain_prediction(customer: CustomerInput, bundle: ModelBundle) -> ChurnPredictionResponse:
-    """
-    Same steps as the notebook's explain_prediction(), in order:
-      1. build a 1-row DataFrame from the raw customer input
-      2. encode Yes/No binary columns to 1/0
-      3. reorder columns to match meta['feature_columns']
-      4. calibrated_model.predict_proba -> churn probability
-      5. threshold from metadata -> churn / no-churn label
-      6. SHAP values on the raw xgb pipeline -> top risk / protective factors
-      7. assemble the human-readable report
-    """
     raw_customer_dict = customer.model_dump()
     customer_df = pd.DataFrame([raw_customer_dict])
 
     customer_df_encoded = customer_df.copy()
     for col in BINARY_COLS:
         if col in customer_df_encoded.columns and customer_df_encoded[col].dtype == object:
-            customer_df_encoded[col] = customer_df_encoded[col].replace({"Yes": 1, "No": 0})
+            customer_df_encoded[col] = customer_df_encoded[col].replace({
+                "Yes": 1, 
+                "No": 0,
+                "No internet service": 0,
+                "No phone service": 0
+            })
 
     customer_df_encoded = customer_df_encoded[bundle.feature_columns]
 

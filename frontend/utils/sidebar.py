@@ -1,25 +1,33 @@
 import streamlit as st
 from streamlit_option_menu import option_menu
 
-
 PAGES = {
     "Dashboard": "app.py",
     "Single Prediction": "pages/1_Single_Prediction.py",
     "Batch Prediction": "pages/2_Batch_Prediction.py",
     "Customer Analytics": "pages/3_Customer_Analytics.py",
     "Explainable AI": "pages/4_Explainable_AI.py",
-    "Model Performance": "pages/5_Model_Performance.py",
-    "Prediction History": "pages/6_Prediction_History.py",
+    "Model Performance": "pages/5_Model_Performance.py"
 }
-
 
 def render_sidebar(active: str = "Dashboard"):
     with st.sidebar:
+        # Hide default Streamlit sidebar navigation
         st.markdown(
-            '<div class="sidebar-logo-title"><h2>Customer Churn<br>Intelligence Platform</h2></div>',
+            """
+            <style>
+                [data-testid="stSidebarNav"] {display: none;}
+            </style>
+            """,
             unsafe_allow_html=True,
         )
-        option_menu(
+
+        st.markdown(
+            '<div class="sidebar-logo-title"><h1>Customer Churn<br>Intelligence Platform</h1></div>',
+            unsafe_allow_html=True,
+        )
+        # st.markdown("""**Customer Churn**\nIntelligence Platform""")
+        selected_option = option_menu(
             menu_title=None,
             options=list(PAGES.keys()),
             icons=["house", "person-check", "layers", "graph-up",
@@ -31,3 +39,5 @@ def render_sidebar(active: str = "Dashboard"):
             },
         )
         
+        if selected_option and selected_option != active:
+            st.switch_page(PAGES[selected_option])

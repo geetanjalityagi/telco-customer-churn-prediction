@@ -12,6 +12,8 @@ class ChurnPredictionResponse(BaseModel):
     prediction: Literal["Will Churn", "Will Stay"]
     churn_probability: float
     risk_level: Literal["Very Low", "Low", "Moderate", "High", "Critical"]
+    risk_emoji: str
+    priority_stars: str
     priority_action: str
 
     top_risk_factors: list[RiskFactor]

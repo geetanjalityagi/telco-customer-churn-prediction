@@ -4,7 +4,7 @@ from fastapi import APIRouter, HTTPException
 
 from app.core.model_loader import get_model_bundle
 from app.schemas.request import CustomerInput
-from app.schemas.response import ChurnPredictionResponse, RiskFactor
+from app.schemas.response import ChurnPredictionResponse
 from app.services.prediction_service import explain_prediction
 
 logger = logging.getLogger("churn_api.routes")

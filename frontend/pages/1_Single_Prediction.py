@@ -4,7 +4,6 @@ import requests
 
 st.set_page_config(page_title="Single Prediction", layout="wide")
 render_sidebar("Single Prediction")
-# st.title("Single Prediction")
 
 API_BASE_URL = "http://localhost:8000/api/v1"
 PREDICT_URL = f"{API_BASE_URL}/predict"
@@ -138,11 +137,11 @@ if submitted:
         else:
             st.markdown("_None identified._")
 
-    # --- business interpretation -------------------------------------------
+    # --- business interpretation -----------------------------
     st.markdown("### 📝 Business Interpretation")
     st.info(result["business_interpretation"])
 
-    # --- recommended actions ------------------------------------------------
+    # --- recommended actions ---------------------------------
     st.markdown("### ✅ Recommended Actions")
     for action in result["recommended_actions"]:
         st.markdown(f"- {action}")

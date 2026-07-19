@@ -6,8 +6,7 @@ PAGES = {
     "Dashboard": "app.py",
     "Single Prediction": "pages/1_Single_Prediction.py",
     "Batch Prediction": "pages/2_Batch_Prediction.py",
-    "Customer Analytics": "pages/3_Customer_Analytics.py",
-    "Explainable AI": "pages/4_Explainable_AI.py",
+    "Customer Analytics": "pages/4_Customer_Analytics.py",
     "Model Performance": "pages/5_Model_Performance.py"
 }
 

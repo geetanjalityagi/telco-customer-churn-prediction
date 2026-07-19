@@ -1,6 +1,7 @@
 import streamlit as st
 from streamlit_option_menu import option_menu
 
+
 PAGES = {
     "Dashboard": "app.py",
     "Single Prediction": "pages/1_Single_Prediction.py",

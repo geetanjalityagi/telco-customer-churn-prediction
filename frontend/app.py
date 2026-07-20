@@ -1,6 +1,7 @@
 import requests
 import streamlit as st
 from utils.sidebar import render_sidebar
+from components.charts import churn_distribution_chart, contract_distribution_chart, contract_vs_churn_chart, internet_service_chart, payment_method_chart, tenure_distribution_chart
 
 st.set_page_config(
     page_title="Customer Churn Intelligence Platform",
@@ -26,30 +27,55 @@ def load_dashboard_data():
 
 dashboard_data = load_dashboard_data()
 
-st.markdown("# Dashboard Overview")
+st.title("🧭 Dashboard Overview")
+st.divider()
 
-col1, col2, col3, col4, col5, col6 = st.columns(6)
+if dashboard_data and "kpis" in dashboard_data:
+    kpis = dashboard_data["kpis"]
+    
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.metric(label="Total Customers", value=kpis.get("total_customers", "N/A"))
+    with col2:
+        st.metric(label="Churn Rate", value=kpis.get("churn_rate", "N/A"))
+    with col3:
+        st.metric(label="High Risk Customers", value=kpis.get("high_risk_customers", "N/A"))
 
-with col1:
-    st.markdown("Total Customers")
-    st.markdown(f"#### {dashboard_data["kpis"]["total_customers"]}")
+    st.write("")
 
-with col2:
-    st.markdown("Churn Rate")
-    st.markdown(f"### {dashboard_data["kpis"]["churn_rate"]}")
+    col4, col5, col6 = st.columns(3)
+    with col4:
+        st.metric(label="Average Tenure", value=kpis.get("average_tenure", "N/A"))
+    with col5:
+        st.metric(label="Average Monthly Charges", value=kpis.get("average_monthly_charges", "N/A"))
+    with col6:
+        st.metric(label="Revenue at Risk", value=kpis.get("revenue_at_risk", "N/A"))
+else:
+    st.info("No dashboard data available to display.")
 
-with col3:
-    st.markdown("High Risk Customers")
-    st.markdown(f"#### {dashboard_data["kpis"]["high_risk_customers"]}")
+st.divider()
 
-with col4:
-    st.markdown("Avergae Tenure")
-    st.markdown(f"#### {dashboard_data["kpis"]["average_tenure"]}")
+st.markdown("### 📈 Key Insights & Trends")
+st.write("")
 
-with col5:
-    st.markdown("Average Monthly Charges")
-    st.markdown(f"#### {dashboard_data["kpis"]["average_monthly_charges"]}")
+chart_col1, chart_col2 = st.columns(2)
+with chart_col1:
+    churn_distribution_chart()
+with chart_col2:
+    contract_distribution_chart()
 
-with col6:
-    st.markdown("Revenure at risk")
-    st.markdown(f"#### {dashboard_data["kpis"]["revenue_at_risk"]}")
+st.write("  ")
+
+chart_col3, chart_col4 = st.columns(2)
+with chart_col3:
+    contract_vs_churn_chart()
+with chart_col4:
+    internet_service_chart()
+
+st.write("  ") 
+
+chart_col5, chart_col6 = st.columns(2)
+with chart_col5:
+    payment_method_chart()
+with chart_col6:
+    tenure_distribution_chart()

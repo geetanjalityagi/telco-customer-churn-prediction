@@ -100,21 +100,29 @@ def contract_vs_churn_chart():
 
     st.plotly_chart(fig, use_container_width=True)
 
-def internet_service_chart():
-    internet_service = dashboard_data["charts"]["internet_service"]
+def internet_vs_churn_chart():
+    internet_vs_churn = dashboard_data["charts"]["internet_vs_churn"]
 
-    df_contract = pd.DataFrame({
-    "Internet Service": list(internet_service.keys()),
-    "Customers": list(internet_service.values())
-    })
+    rows = []
+
+    for internet, churn_data in internet_vs_churn.items():
+        for churn_status, count in churn_data.items():
+            rows.append({
+                "Internet Service": internet,
+                "Churn": churn_status,
+                "Customers": count
+            })
+
+    df_internet_churn = pd.DataFrame(rows)
 
     fig = px.bar(
-    df_contract,
-    x="Customers",
-    y="Internet Service",
-    orientation="h",
+    df_internet_churn,
+    x="Internet Service",
+    y="Customers",
+    color="Churn",
+    barmode="group",
     text="Customers",
-    title="Customer Distribution by Internet Service"
+    title="Which Internet Services are risky?"
 )
 
     fig.update_traces(
@@ -122,43 +130,67 @@ def internet_service_chart():
     )
 
     fig.update_layout(
-        xaxis_title="Number of Customers",
-        yaxis_title="Internet Service"
+        xaxis_title="Internet Service",
+        yaxis_title="Number of Customers",
+        legend_title="Churn"
     )
 
     st.plotly_chart(fig, use_container_width=True)
 
-def payment_method_chart():
-    payment_method = dashboard_data["charts"]["payment_method"]
+def payment_vs_churn_chart():
+    payment_vs_churn = dashboard_data["charts"]["payment_vs_churn"]
 
-    df_payment = pd.DataFrame({
-        "Payment Method": list(payment_method.keys()),
-        "Customers": list(payment_method.values())
-    })
+    rows = []
 
-    fig = px.pie(
-        df_payment,
-        names="Payment Method",
-        values="Customers",
-        hole=0.5,
-        title="Payment Method Distribution"
+    for payment, churn_data in payment_vs_churn.items():
+        for churn_status, count in churn_data.items():
+            rows.append({
+                "Payment Method": payment,
+                "Churn": churn_status,
+                "Customers": count
+            })
+
+    df_payment_churn = pd.DataFrame(rows)
+
+    fig = px.bar(
+    df_payment_churn,
+    x="Payment Method",
+    y="Customers",
+    color="Churn",
+    barmode="group",
+    text="Customers",
+    title="Churn by Payment Method"
+)
+
+    fig.update_traces(
+        textposition="outside"
+    )
+
+    fig.update_layout(
+        xaxis_title="Internet Service",
+        yaxis_title="Number of Customers",
+        legend_title="Churn"
     )
 
     st.plotly_chart(fig, use_container_width=True)
+
 
 def tenure_distribution_chart():
     tenure_distribution = dashboard_data["charts"]["tenure_distribution"]
 
-    df_tenure = pd.DataFrame({
-        "Tenure Range (Months)": list(tenure_distribution.keys()),
-        "Customers": list(tenure_distribution.values())
-    })
+    rows = []
+    for churn_status, tenures in tenure_distribution.items():
+        for t in tenures:
+            rows.append({"Churn": churn_status, "Tenure (Months)": t})
 
-    fig = px.funnel(
+    df_tenure = pd.DataFrame(rows)
+
+    fig = px.box(
         df_tenure,
-        x="Customers",
-        y="Tenure Range (Months)",
-        title="Customer Tenure Distribution"
+        x="Churn",
+        y="Tenure (Months)",
+        color="Churn",
+        title="Tenure Distribution by Churn"
     )
 
     st.plotly_chart(fig, use_container_width=True)
@@ -179,6 +211,27 @@ def monthly_charges_chart():
     fig.update_layout(
         xaxis_title="Monthly Charges ($)",
         yaxis_title="Number of Customers"
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+
+
+def correlation_chart():
+    correlation = dashboard_data["charts"]["correlation_matrix"]
+
+    corr_df = pd.DataFrame(correlation)
+
+    fig = px.imshow(
+    corr_df,
+    text_auto=".2f",
+    aspect="auto",
+    color_continuous_scale="RdBu_r",
+    title="Feature Correlation Heatmap"
+)
+
+    fig.update_layout(
+        xaxis_title="Features",
+        yaxis_title="Features"
     )
 
     st.plotly_chart(fig, use_container_width=True)

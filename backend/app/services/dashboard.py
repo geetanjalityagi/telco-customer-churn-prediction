@@ -44,15 +44,28 @@ def charts_info():
     customer_vs_churn = df.groupby("Contract")["Churn"].value_counts().unstack(fill_value=0).to_dict(orient="index")
     internet_vs_churn = df.groupby("InternetService")["Churn"].value_counts().unstack(fill_value=0).to_dict(orient="index")
     payment_vs_churn = df.groupby("PaymentMethod")["Churn"].value_counts().unstack(fill_value=0).to_dict(orient="index")
-    tenure_bins = pd.cut(
-                    df["tenure"],
-                    bins=[0, 12, 24, 48, 72],
-                    labels=["0-12", "13-24", "25-48", "49-72"],
-                    include_lowest=True)
-    tenure_distribution = tenure_bins.value_counts().sort_index().to_dict()
+    tenure_distribution = {
+        "Yes": df[df["Churn"] == "Yes"]["tenure"].tolist(),
+        "No": df[df["Churn"] == "No"]["tenure"].tolist()
+    }
     monthly_charges = list(df['MonthlyCharges'])
     numeric_df = df.select_dtypes(include="number")
-    correlation_matrix = (numeric_df.corr().round(2).to_dict())
+
+    corr_df = df.copy()
+    corr_df["Churn"] = corr_df["Churn"].map({
+        "No": 0,
+        "Yes": 1
+    })
+
+    numeric_df = corr_df.select_dtypes(include="number")
+
+    correlation_matrix = (
+        numeric_df
+        .corr()
+        .round(2)
+        .to_dict()
+    )
+
 
     return Charts(
         churn_distribution =  churn_distribution,

@@ -16,7 +16,7 @@ class Charts(BaseModel):
     contract_vs_churn: Dict[str, Dict[str, int]]
     internet_vs_churn: Dict[str, Dict[str, int]]
     payment_vs_churn: Dict[str, Dict[str, int]]
-    tenure_distribution: Dict[str, int]
+    tenure_distribution: Dict[str, List[int]]
     monthly_charges: List[float]
     correlation_matrix: Dict[str, Dict[str, float]]
 

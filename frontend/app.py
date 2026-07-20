@@ -1,7 +1,7 @@
 import requests
 import streamlit as st
 from utils.sidebar import render_sidebar
-from components.charts import churn_distribution_chart, contract_distribution_chart, contract_vs_churn_chart, internet_service_chart, payment_method_chart, tenure_distribution_chart, monthly_charges_chart
+from components.charts import churn_distribution_chart, contract_distribution_chart, contract_vs_churn_chart, internet_vs_churn_chart, payment_vs_churn_chart, tenure_distribution_chart, monthly_charges_chart, correlation_chart
 
 st.set_page_config(
     page_title="Customer Churn Intelligence Platform",
@@ -69,15 +69,48 @@ st.write("  ")
 chart_col3, chart_col4 = st.columns(2)
 with chart_col3:
     contract_vs_churn_chart()
+    with st.expander("Insights"):
+        st.write(
+            """
+            - Customers with Month-to-Month contracts have the highest churn rate.
+            - Customers with One-Year and Two-Year contracts are much more likely to stay.
+            - Longer contracts improve customer retention.
+            """
+        )
 with chart_col4:
-    internet_service_chart()
+    internet_vs_churn_chart()
+    with st.expander("Insights"):
+        st.write(
+            """
+            - Fiber Optic customers have the highest churn rate.
+            - Customers without internet service have the lowest churn.
+            - Fiber Optic customers should be prioritized for retention strategies.
+            """
+        )
 
 st.write("  ") 
 
 chart_col5, chart_col6 = st.columns(2)
 with chart_col5:
-    payment_method_chart()
+    payment_vs_churn_chart()
+    with st.expander("Insights"):
+        st.write(
+            """
+            - Customers using Electronic Check have the highest churn rate.
+            - Automatic payment methods are associated with lower churn.
+            - Promoting automatic payments may help reduce churn.
+            """
+        )
 with chart_col6:
     tenure_distribution_chart()
+    with st.expander("Insights"):
+        st.write(
+            """
+            - Customers with shorter tenure are more likely to churn.
+            - Churn decreases as customer tenure increases.
+            - The first year is the most critical period for retention.
+            """
+        )
 
 monthly_charges_chart()
+correlation_chart()

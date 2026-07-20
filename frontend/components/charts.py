@@ -161,6 +161,24 @@ def tenure_distribution_chart():
         title="Customer Tenure Distribution"
     )
 
+    st.plotly_chart(fig, use_container_width=True)
 
+def monthly_charges_chart():
+    monthly_charges = pd.DataFrame({
+        "MonthlyCharges": dashboard_data["charts"]["monthly_charges"]
+    })
+
+    fig = px.histogram(
+        monthly_charges,
+        x="MonthlyCharges",
+        nbins=30,
+        title="Monthly Charges Distribution",
+        marginal="box"
+    )
+
+    fig.update_layout(
+        xaxis_title="Monthly Charges ($)",
+        yaxis_title="Number of Customers"
+    )
 
     st.plotly_chart(fig, use_container_width=True)

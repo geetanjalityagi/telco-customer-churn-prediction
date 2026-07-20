@@ -14,10 +14,11 @@ class Charts(BaseModel):
     churn_distribution: Dict[str, int]
     contract_distribution: Dict[str, int]
     contract_vs_churn: Dict[str, Dict[str, int]]
-    internet_service: Dict[str, int]
-    payment_method: Dict[str, int]
+    internet_vs_churn: Dict[str, Dict[str, int]]
+    payment_vs_churn: Dict[str, Dict[str, int]]
     tenure_distribution: Dict[str, int]
-
+    monthly_charges: List[float]
+    correlation_matrix: Dict[str, Dict[str, float]]
 
 class DashboardResponse(BaseModel):
     kpis: KPIs

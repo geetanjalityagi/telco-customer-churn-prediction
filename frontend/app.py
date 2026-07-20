@@ -1,7 +1,7 @@
 import requests
 import streamlit as st
 from utils.sidebar import render_sidebar
-from components.charts import churn_distribution_chart, contract_distribution_chart, contract_vs_churn_chart, internet_service_chart, payment_method_chart, tenure_distribution_chart
+from components.charts import churn_distribution_chart, contract_distribution_chart, contract_vs_churn_chart, internet_service_chart, payment_method_chart, tenure_distribution_chart, monthly_charges_chart
 
 st.set_page_config(
     page_title="Customer Churn Intelligence Platform",
@@ -79,3 +79,5 @@ with chart_col5:
     payment_method_chart()
 with chart_col6:
     tenure_distribution_chart()
+
+monthly_charges_chart()

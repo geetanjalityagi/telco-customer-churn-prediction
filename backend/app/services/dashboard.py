@@ -42,22 +42,27 @@ def charts_info():
     churn_distribution = df['Churn'].value_counts().to_dict()
     contract_distribution = df['Contract'].value_counts().to_dict()
     customer_vs_churn = df.groupby("Contract")["Churn"].value_counts().unstack(fill_value=0).to_dict(orient="index")
-    internet_service = df['InternetService'].value_counts().to_dict()
-    payment_method = df['PaymentMethod'].value_counts().to_dict()
+    internet_vs_churn = df.groupby("InternetService")["Churn"].value_counts().unstack(fill_value=0).to_dict(orient="index")
+    payment_vs_churn = df.groupby("PaymentMethod")["Churn"].value_counts().unstack(fill_value=0).to_dict(orient="index")
     tenure_bins = pd.cut(
                     df["tenure"],
                     bins=[0, 12, 24, 48, 72],
                     labels=["0-12", "13-24", "25-48", "49-72"],
                     include_lowest=True)
     tenure_distribution = tenure_bins.value_counts().sort_index().to_dict()
+    monthly_charges = list(df['MonthlyCharges'])
+    numeric_df = df.select_dtypes(include="number")
+    correlation_matrix = (numeric_df.corr().round(2).to_dict())
 
     return Charts(
         churn_distribution =  churn_distribution,
         contract_distribution = contract_distribution,
         contract_vs_churn = customer_vs_churn,
-        internet_service = internet_service,
-        payment_method = payment_method,
-        tenure_distribution = tenure_distribution
+        internet_vs_churn = internet_vs_churn,
+        payment_vs_churn = payment_vs_churn,
+        tenure_distribution = tenure_distribution,
+        monthly_charges = monthly_charges,
+        correlation_matrix = correlation_matrix
     )
 
 def dashboard_data():

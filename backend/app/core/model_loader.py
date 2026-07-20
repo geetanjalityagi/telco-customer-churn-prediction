@@ -35,6 +35,10 @@ class ModelBundle:
         """Calibrated churn probability, same call as the notebook."""
         return self.calibrated_model.predict_proba(X_encoded)[:, 1][0]
 
+    def predict_proba_batch(self, X_encoded):
+        """Calibrated churn probability for a batch of customers."""
+        return self.calibrated_model.predict_proba(X_encoded)[:, 1]
+
     def shap_values(self, X_encoded):
         transformed = self.preprocessor.transform(X_encoded)
         feature_names = self.preprocessor.get_feature_names_out()

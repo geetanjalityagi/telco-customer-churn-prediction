@@ -8,7 +8,6 @@ class KPIs(BaseModel):
     average_tenure: float
     average_monthly_charges: float
     revenue_at_risk: float
-    model_accuracy: float
 
 
 class Charts(BaseModel):

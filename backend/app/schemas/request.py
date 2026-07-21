@@ -48,3 +48,37 @@ class CustomerInput(BaseModel):
         }
     }
 
+
+class BatchCustomerInput(BaseModel):
+    customers: list[CustomerInput]
+
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "customers": [
+                    {
+                        "SeniorCitizen": 0,
+                        "Partner": "No",
+                        "Dependents": "No",
+                        "tenure": 2,
+                        "PhoneService": "Yes",
+                        "MultipleLines": "Yes",
+                        "InternetService": "Fiber optic",
+                        "OnlineSecurity": "No",
+                        "OnlineBackup": "No",
+                        "DeviceProtection": "No",
+                        "TechSupport": "No",
+                        "StreamingTV": "Yes",
+                        "StreamingMovies": "Yes",
+                        "Contract": "Month-to-month",
+                        "PaperlessBilling": "Yes",
+                        "PaymentMethod": "Electronic check",
+                        "MonthlyCharges": 95.50,
+                        "TotalCharges": 191.00,
+                    }
+                ]
+            }
+        }
+    }
+
+

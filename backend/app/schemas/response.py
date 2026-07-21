@@ -36,3 +36,9 @@ class ChurnPredictionResponse(BaseModel):
 
     business_interpretation: str
     recommended_actions: list[str]
+
+class BatchChurnPredictionResponse(BaseModel):
+    total_customers: int
+    predicted_churn_count: int
+    churn_rate: float
+    predictions: list[ChurnPredictionResponse]

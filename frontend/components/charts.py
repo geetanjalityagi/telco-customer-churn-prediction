@@ -40,8 +40,8 @@ def churn_distribution_chart():
 def contract_distribution_chart():
     contract_distribution = dashboard_data["charts"]["contract_distribution"]
     df_contract = pd.DataFrame({
-    "Contract Type": list(contract_distribution.keys()),
-    "Customers": list(contract_distribution.values())
+        "Contract Type": list(contract_distribution.keys()),
+        "Customers": list(contract_distribution.values())
     })
 
     fig = px.bar(
@@ -69,11 +69,13 @@ def contract_vs_churn_chart():
     rows = []
 
     for contract, churn_data in contract_vs_churn.items():
+        total = sum(churn_data.values())
         for churn_status, count in churn_data.items():
+            rate = round((count / total * 100), 1) if total > 0 else 0
             rows.append({
                 "Contract Type": contract,
                 "Churn": churn_status,
-                "Customers": count
+                "Churn Rate (%)": rate
             })
 
     df_contract_churn = pd.DataFrame(rows)
@@ -81,11 +83,11 @@ def contract_vs_churn_chart():
     fig = px.bar(
     df_contract_churn,
     x="Contract Type",
-    y="Customers",
+    y="Churn Rate (%)",
     color="Churn",
     barmode="group",
-    text="Customers",
-    title="Churn by Contract Type"
+    text="Churn Rate (%)",
+    title="Churn Rate by Contract Type"
 )
 
     fig.update_traces(
@@ -94,7 +96,7 @@ def contract_vs_churn_chart():
 
     fig.update_layout(
         xaxis_title="Contract Type",
-        yaxis_title="Number of Customers",
+        yaxis_title="Churn Rate (%)",
         legend_title="Churn"
     )
 
@@ -106,11 +108,13 @@ def internet_vs_churn_chart():
     rows = []
 
     for internet, churn_data in internet_vs_churn.items():
+        total = sum(churn_data.values())
         for churn_status, count in churn_data.items():
+            rate = round((count / total * 100), 1) if total > 0 else 0
             rows.append({
                 "Internet Service": internet,
                 "Churn": churn_status,
-                "Customers": count
+                "Churn Rate (%)": rate
             })
 
     df_internet_churn = pd.DataFrame(rows)
@@ -118,10 +122,10 @@ def internet_vs_churn_chart():
     fig = px.bar(
     df_internet_churn,
     x="Internet Service",
-    y="Customers",
+    y="Churn Rate (%)",
     color="Churn",
     barmode="group",
-    text="Customers",
+    text="Churn Rate (%)",
     title="Which Internet Services are risky?"
 )
 
@@ -131,7 +135,7 @@ def internet_vs_churn_chart():
 
     fig.update_layout(
         xaxis_title="Internet Service",
-        yaxis_title="Number of Customers",
+        yaxis_title="Churn Rate (%)",
         legend_title="Churn"
     )
 
@@ -143,11 +147,13 @@ def payment_vs_churn_chart():
     rows = []
 
     for payment, churn_data in payment_vs_churn.items():
+        total = sum(churn_data.values())
         for churn_status, count in churn_data.items():
+            rate = round((count / total * 100), 1) if total > 0 else 0
             rows.append({
                 "Payment Method": payment,
                 "Churn": churn_status,
-                "Customers": count
+                "Churn Rate (%)": rate
             })
 
     df_payment_churn = pd.DataFrame(rows)
@@ -155,11 +161,11 @@ def payment_vs_churn_chart():
     fig = px.bar(
     df_payment_churn,
     x="Payment Method",
-    y="Customers",
+    y="Churn Rate (%)",
     color="Churn",
     barmode="group",
-    text="Customers",
-    title="Churn by Payment Method"
+    text="Churn Rate (%)",
+    title="Churn Rate by Payment Method"
 )
 
     fig.update_traces(
@@ -167,8 +173,8 @@ def payment_vs_churn_chart():
     )
 
     fig.update_layout(
-        xaxis_title="Internet Service",
-        yaxis_title="Number of Customers",
+        xaxis_title="Payment Method",
+        yaxis_title="Churn Rate (%)",
         legend_title="Churn"
     )
 
@@ -235,3 +241,34 @@ def correlation_chart():
     )
 
     st.plotly_chart(fig, use_container_width=True)
+
+def contract_payment_heatmap():
+
+    heatmap_data = (
+        dashboard_data["charts"]["contract_payment_churn_rate"]
+    )
+
+    heatmap_df = pd.DataFrame(heatmap_data).T
+
+    fig = px.imshow(
+        heatmap_df,
+        text_auto=".1f",
+        aspect="auto",
+        color_continuous_scale="balance",
+        labels=dict(
+            x="Payment Method",
+            y="Contract Type",
+            color="Churn Rate (%)"
+        ),
+        title="Which payment methods are risky within each contract type?"
+    )
+
+    fig.update_layout(
+        xaxis_title="Payment Method",
+        yaxis_title="Contract Type"
+    )
+
+    st.plotly_chart(
+        fig,
+        use_container_width=True
+    )

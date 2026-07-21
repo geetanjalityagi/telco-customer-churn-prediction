@@ -66,6 +66,22 @@ def charts_info():
         .to_dict()
     )
 
+    temp_df = df.copy()
+
+    temp_df["Churn"] = temp_df["Churn"].map({
+        "No": 0,
+        "Yes": 1
+    })
+
+    contract_payment_churn_rate = (
+        temp_df
+        .groupby(["Contract", "PaymentMethod"])["Churn"]
+        .mean()
+        .mul(100)
+        .round(1)
+        .unstack(fill_value=0)
+        .to_dict(orient="index")
+    )
 
     return Charts(
         churn_distribution =  churn_distribution,
@@ -75,7 +91,8 @@ def charts_info():
         payment_vs_churn = payment_vs_churn,
         tenure_distribution = tenure_distribution,
         monthly_charges = monthly_charges,
-        correlation_matrix = correlation_matrix
+        correlation_matrix = correlation_matrix,
+        contract_payment_churn_rate =  contract_payment_churn_rate
     )
 
 def dashboard_data():

@@ -19,6 +19,7 @@ class Charts(BaseModel):
     tenure_distribution: Dict[str, List[int]]
     monthly_charges: List[float]
     correlation_matrix: Dict[str, Dict[str, float]]
+    contract_payment_churn_rate: Dict[str, Dict[str, float]]
 
 class DashboardResponse(BaseModel):
     kpis: KPIs

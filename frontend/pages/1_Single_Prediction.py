@@ -2,7 +2,7 @@ import streamlit as st
 from utils.sidebar import render_sidebar
 import requests
 
-st.set_page_config(page_title="Single Prediction", layout="wide")
+st.set_page_config(page_title="Single Prediction",page_icon="🧠", layout="wide")
 render_sidebar("Single Prediction")
 
 API_BASE_URL = "http://localhost:8000/api/v1"
@@ -16,7 +16,7 @@ RISK_COLOR = {
     "Critical": "#c62828",
 }
 
-st.title("📊 Customer Churn Prediction")
+st.title("🧠 Customer Churn Prediction")
 st.caption("Enter a customer's profile to score their churn risk and see what's driving it.")
 
 with st.form("customer_form"):

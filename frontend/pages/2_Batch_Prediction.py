@@ -10,3 +10,4 @@ uploaded_file = st.file_uploader(
     type=["csv"],
     help="Upload a CSV file containing customer information for batch churn prediction."
 )
+

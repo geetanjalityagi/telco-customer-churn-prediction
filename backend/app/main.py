@@ -18,9 +18,6 @@ app = FastAPI(
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Load model artifacts once, at startup, so the first real request
-    # isn't slowed down and a missing/corrupt artifact fails fast (crashes
-    # on boot) rather than surfacing as a 500 later.
     logger.info("Warming up model bundle...")
     get_model_bundle()
     logger.info("Model bundle ready.")

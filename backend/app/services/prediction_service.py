@@ -1,8 +1,7 @@
-import io
 import pandas as pd
 
 from app.core.model_loader import ModelBundle
-from app.schemas.response import ChurnPredictionResponse, BatchChurnPredictionResponse, RiskFactor
+from app.schemas.response import ChurnPredictionResponse, RiskFactor
 from app.schemas.request import CustomerInput
 
 BINARY_COLS = [
@@ -146,71 +145,4 @@ def explain_prediction(customer: CustomerInput, bundle: ModelBundle) -> ChurnPre
         business_interpretation=business_interpretation,
         recommended_actions=recommended_actions,
     )
-
-
-def explain_batch_predictions(
-    customers: list[CustomerInput], bundle: ModelBundle
-) -> BatchChurnPredictionResponse:
-    predictions = [explain_prediction(customer, bundle) for customer in customers]
-    total = len(predictions)
-    churn_count = sum(1 for p in predictions if p.prediction == "Will Churn")
-    churn_rate = round((churn_count / total * 100), 2) if total > 0 else 0.0
-
-    return BatchChurnPredictionResponse(
-        total_customers=total,
-        predicted_churn_count=churn_count,
-        churn_rate=churn_rate,
-        predictions=predictions,
-    )
-
-
-def explain_batch_file_predictions(
-    file_bytes: bytes, filename: str, bundle: ModelBundle
-) -> BatchChurnPredictionResponse:
-    try:
-        df = pd.read_csv(io.BytesIO(file_bytes))
-    except Exception as e:
-        raise ValueError(f"Failed to parse CSV file: {str(e)}")
-
-    # Clean object/string columns by stripping whitespace
-    for col in df.select_dtypes(include="object").columns:
-        df[col] = df[col].astype(str).str.strip()
-
-    # Pre-clean numeric columns where spaces (' ') or invalid strings might exist
-    if "TotalCharges" in df.columns:
-        df["TotalCharges"] = pd.to_numeric(df["TotalCharges"], errors="coerce")
-    if "MonthlyCharges" in df.columns:
-        df["MonthlyCharges"] = pd.to_numeric(df["MonthlyCharges"], errors="coerce").fillna(0.0)
-    if "tenure" in df.columns:
-        df["tenure"] = pd.to_numeric(df["tenure"], errors="coerce").fillna(0).astype(int)
-    if "SeniorCitizen" in df.columns:
-        df["SeniorCitizen"] = pd.to_numeric(df["SeniorCitizen"], errors="coerce").fillna(0).astype(int)
-
-    # For missing TotalCharges (e.g. tenure == 0 where TotalCharges was ' '), fill with tenure * MonthlyCharges
-    if "TotalCharges" in df.columns and "MonthlyCharges" in df.columns and "tenure" in df.columns:
-        df["TotalCharges"] = df["TotalCharges"].fillna(df["MonthlyCharges"]).fillna(0.0)
-    elif "TotalCharges" in df.columns:
-        df["TotalCharges"] = df["TotalCharges"].fillna(0.0)
-
-    customers = []
-    for idx, row in df.iterrows():
-        row_dict = row.to_dict()
-        clean_dict = {}
-        for k, v in row_dict.items():
-            if k in CustomerInput.model_fields:
-                if pd.isna(v):
-                    continue
-                if k in ("SeniorCitizen", "tenure"):
-                    clean_dict[k] = int(v)
-                elif k in ("MonthlyCharges", "TotalCharges"):
-                    clean_dict[k] = float(v)
-                else:
-                    clean_dict[k] = str(v).strip()
-        try:
-            customer = CustomerInput(**clean_dict)
-            customers.append(customer)
-        except Exception as err:
-            raise ValueError(f"Validation error at row {idx + 1}: {str(err)}")
-
-    return explain_batch_predictions(customers, bundle)
 

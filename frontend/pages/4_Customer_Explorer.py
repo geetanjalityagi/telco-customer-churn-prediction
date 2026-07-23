@@ -1,40 +1,33 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px
 from utils.sidebar import render_sidebar
 from components.filter_data import filter_data
 from components.insights import insights_tab
 
-# Set up page configurations
 st.set_page_config(page_title="Customer Explorer", page_icon="🔍", layout="wide")
 render_sidebar("Customer Explorer")
 
-# Load and prepare processed customer dataset
 df = pd.read_csv("data/processed.csv")
 total_records = len(df)
 
-# Header Section
 st.title("🔍 Customer Explorer")
 st.caption(
     "Explore customer demographics, service usages, billing patterns, and cohort distributions. "
     "Use the filtering widgets in the left sidebar to isolate specific segments."
 )
 
-# Apply filters from the sidebar component
 filtered_df = filter_data(df)
-filtered_records = len(filtered_df)
+filtered_records = filtered_df.shape[0]
 
 if filtered_records == 0:
     st.warning("⚠️ No customers match the current filter selection. Please adjust your filters in the sidebar.")
 else:
-    # ── Organize Interface with Tabs ──────────────────────────────────────────
     tab_overview, tab_table, tab_lookup = st.tabs([
-        "📊 Overview & Stats",
-        "📋 Data Table",
+        "📊 Cohort Overview & Stats",
+        "📋 Cohort Data Table",
         "🔍 Individual Customer Lookup"
     ])
     
-    # Calculate cohort key figures
     churn_yes_count = len(filtered_df[filtered_df["Churn"] == "Yes"])
     cohort_churn_rate = (churn_yes_count / filtered_records * 100) if filtered_records > 0 else 0.0
     percent_of_total = (filtered_records / total_records * 100)
@@ -72,7 +65,7 @@ else:
             )
             
         st.divider()
-        st.markdown("### 📊 Distributions")
+        st.markdown("### 📊 Cohort Distributions")
         insights_tab(filtered_df)
         
     # ── TAB 2: COHORT DATA TABLE ──────────────────────────────────────────────
@@ -82,11 +75,12 @@ else:
             "Below is the complete tabular list of customers within the active filtered cohort. "
             "You can sort, filter, and search directly within the interactive table, or download it as a CSV."
         )
-        
-        # Display formatted cohort table
+        st.info(
+            f"📊 Showing **{filtered_records:,} customers** × {filtered_df.shape[1]} columns "
+            f"({percent_of_total:.1f}% of the full {total_records:,}-customer base)"
+        )
         st.dataframe(filtered_df, use_container_width=True)
         
-        # CSV Export functionality
         csv = filtered_df.to_csv(index=False).encode('utf-8')
         st.download_button(
             label="📥 Download Cohort as CSV",
@@ -99,13 +93,13 @@ else:
     # ── TAB 3: INDIVIDUAL CUSTOMER LOOKUP ─────────────────────────────────────
     with tab_lookup:
         st.markdown("### 🔍 Individual Customer Profile Deep-Dive")
-        st.markdown(
+        st.caption(
             "Select or search for a customer ID from the active cohort to explore their details, "
             "demographic characteristics, contract billing options, and service subscriptions."
         )
-        
+
         cohort_cust_ids = sorted(filtered_df["customerID"].tolist())
-        
+
         lookup_col1, lookup_col2 = st.columns([2, 1])
         with lookup_col1:
             input_mode = st.radio(
@@ -114,7 +108,7 @@ else:
                 horizontal=True,
                 label_visibility="collapsed"
             )
-            
+
             if input_mode == "Select from Active Cohort Dropdown":
                 max_list = 500
                 list_ids = cohort_cust_ids[:max_list]
@@ -126,132 +120,170 @@ else:
                 )
             else:
                 selected_id = st.text_input(
-                    "Enter Customer ID Manually", 
+                    "Enter Customer ID Manually",
                     placeholder="e.g., 7590-VHVEG",
                     key="customer_text_input"
                 ).strip()
-        
+
         if not selected_id:
             st.info("💡 Please select or enter a Customer ID to view their profile.")
         else:
-            # Query customer record from the full database
             cust_row = df[df["customerID"] == selected_id]
-            
+
             if cust_row.empty:
-                st.error(f"❌ Customer ID '{selected_id}' not found in database. Check spelling or try selecting from the dropdown.")
+                st.error(f"❌ Customer ID '{selected_id}' not found in the database. Check spelling or try selecting from the dropdown.")
             else:
                 customer = cust_row.iloc[0]
-                
-                # Check historic churn status
                 is_churned = customer["Churn"] == "Yes"
-                status_color = "#ef5350" if is_churned else "#66bb6a"
-                status_label = "CHURNED ❌" if is_churned else "ACTIVE / RETAINED ✅"
-                
-                st.markdown("---")
-                
-                # Header Badge for Customer ID
-                st.markdown(
-                    f"""
-                    <div style="background-color: {status_color}12; padding: 15px; border-radius: 8px; border-left: 6px solid {status_color}; margin-bottom: 20px;">
-                        <h3 style="margin: 0; padding: 0; color: #1e293b;">👤 Customer Profile: {selected_id}</h3>
-                        <p style="margin: 5px 0 0 0; font-size: 1.05rem; color: #334155;">
-                            Historical Account Status: <strong style="color: {status_color};">{status_label}</strong>
-                        </p>
-                    </div>
-                    """,
-                    unsafe_allow_html=True
-                )
-                
-                # Divide attributes into structured columns
+
+                st.divider()
+
+                # ── Status Banner ──────────────────────────────────────────
+                if is_churned:
+                    st.error(f"👤 **Customer Profile: {selected_id}** — Historical Account Status: **CHURNED ❌**")
+                else:
+                    st.success(f"👤 **Customer Profile: {selected_id}** — Historical Account Status: **ACTIVE / RETAINED ✅**")
+
+                st.write("")
+
+                # ── Demographics & Billing | Services ─────────────────────
                 info_col1, info_col2 = st.columns(2)
-                
+
                 with info_col1:
-                    # Demographics Section
+                    # --- Demographics ---
                     st.markdown("#### 👤 Demographics & Profile")
                     gender_icon = "👩" if customer["gender"] == "Female" else "👨"
                     senior_status = "Yes (Age 65+)" if customer["SeniorCitizen"] == 1 else "No"
-                    
-                    st.markdown(f"**Gender:** {gender_icon} {customer['gender']}")
-                    st.markdown(f"**Senior Citizen:** {senior_status}")
-                    st.markdown(f"**Has Partner:** {'Yes 💑' if customer['Partner'] == 'Yes' else 'No'}")
-                    st.markdown(f"**Has Dependents:** {'Yes 👨‍👩‍👧' if customer['Dependents'] == 'Yes' else 'No'}")
-                    
-                    st.markdown("")
-                    
-                    # Billing Section
-                    st.markdown("#### 💳 Billing & Contract Settings")
-                    st.markdown(f"**Contract Duration:** `{customer['Contract']}`")
-                    st.markdown(f"**Tenure:** `{customer['tenure']} months`")
-                    st.markdown(f"**Monthly Charges:** `${customer['MonthlyCharges']:.2f}`")
-                    
-                    # Gracefully handle total charges formatting
+
+                    demo_data = {
+                        "Field": ["Gender", "Senior Citizen", "Has Partner", "Has Dependents"],
+                        "Value": [
+                            f"{gender_icon} {customer['gender']}",
+                            senior_status,
+                            "Yes 💑" if customer["Partner"] == "Yes" else "No",
+                            "Yes 👨‍👩‍👧" if customer["Dependents"] == "Yes" else "No",
+                        ],
+                    }
+                    st.dataframe(
+                        demo_data,
+                        use_container_width=True,
+                        hide_index=True,
+                    )
+
+                    st.write("")
+
+                    # --- Billing ---
+                    st.markdown("#### 💳 Billing & Contract")
                     try:
-                        total_ch = float(customer['TotalCharges'])
-                        total_ch_str = f"${total_ch:.2f}"
+                        total_ch_str = f"${float(customer['TotalCharges']):.2f}"
                     except Exception:
-                        total_ch_str = f"{customer['TotalCharges']}"
-                        
-                    st.markdown(f"**Total Charges:** `{total_ch_str}`")
-                    st.markdown(f"**Payment Method:** `{customer['PaymentMethod']}`")
-                    st.markdown(f"**Paperless Billing:** {'Yes 📄' if customer['PaperlessBilling'] == 'Yes' else 'No'}")
+                        total_ch_str = str(customer["TotalCharges"])
+
+                    billing_data = {
+                        "Field": [
+                            "Contract Duration",
+                            "Tenure",
+                            "Monthly Charges",
+                            "Total Charges",
+                            "Payment Method",
+                            "Paperless Billing",
+                        ],
+                        "Value": [
+                            str(customer["Contract"]),
+                            f"{customer['tenure']} months",
+                            f"${customer['MonthlyCharges']:.2f}",
+                            total_ch_str,
+                            str(customer["PaymentMethod"]),
+                            "Yes 📄" if customer["PaperlessBilling"] == "Yes" else "No",
+                        ],
+                    }
+                    st.dataframe(
+                        billing_data,
+                        use_container_width=True,
+                        hide_index=True,
+                    )
 
                 with info_col2:
-                    # Services Section
                     st.markdown("#### 📡 Subscribed Services")
-                    
-                    services = {
-                        "Phone Service": customer.get("PhoneService", "No"),
-                        "Multiple Lines": customer.get("MultipleLines", "No"),
-                        "Internet Service": customer.get("InternetService", "No"),
-                        "Online Security": customer.get("OnlineSecurity", "No"),
-                        "Online Backup": customer.get("OnlineBackup", "No"),
-                        "Device Protection": customer.get("DeviceProtection", "No"),
-                        "Tech Support": customer.get("TechSupport", "No"),
-                        "Streaming TV": customer.get("StreamingTV", "No"),
-                        "Streaming Movies": customer.get("StreamingMovies", "No")
+
+                    SERVICE_ICONS = {
+                        "Phone Service":    "📞",
+                        "Multiple Lines":   "📲",
+                        "Internet Service": "🌐",
+                        "Online Security":  "🔒",
+                        "Online Backup":    "☁️",
+                        "Device Protection":"🛡️",
+                        "Tech Support":     "🛠️",
+                        "Streaming TV":     "📺",
+                        "Streaming Movies": "🎬",
                     }
-                    
-                    for svc, status in services.items():
-                        if status == "Yes" or (svc == "InternetService" and status != "No") or (svc == "MultipleLines" and status == "Yes"):
-                            # Active Service Badge
-                            badge_style = "background-color: #e8f5e9; color: #1b5e20;" if svc == "InternetService" else "background-color: #e3f2fd; color: #0d47a1;"
-                            status_text = status if svc == "InternetService" else "Active"
-                            badge_html = f"<span style='{badge_style} padding: 2px 8px; border-radius: 4px; font-weight: bold; font-size: 0.85rem; margin-right: 8px;'>{status_text}</span>"
-                            label_html = f"<strong style='color: #1e293b;'>{svc}</strong>"
-                        elif status in ["No internet service", "No phone service"]:
-                            # Non-Applicable Badge
-                            badge_html = f"<span style='background-color: #f1f5f9; color: #64748b; padding: 2px 8px; border-radius: 4px; font-size: 0.85rem; margin-right: 8px;'>N/A</span>"
-                            label_html = f"<span style='color: #64748b;'>{svc}</span>"
+                    services_raw = {
+                        "Phone Service":    customer.get("PhoneService", "No"),
+                        "Multiple Lines":   customer.get("MultipleLines", "No"),
+                        "Internet Service": customer.get("InternetService", "No"),
+                        "Online Security":  customer.get("OnlineSecurity", "No"),
+                        "Online Backup":    customer.get("OnlineBackup", "No"),
+                        "Device Protection":customer.get("DeviceProtection", "No"),
+                        "Tech Support":     customer.get("TechSupport", "No"),
+                        "Streaming TV":     customer.get("StreamingTV", "No"),
+                        "Streaming Movies": customer.get("StreamingMovies", "No"),
+                    }
+
+                    svc_names, svc_statuses = [], []
+                    for svc, raw in services_raw.items():
+                        icon = SERVICE_ICONS.get(svc, "")
+                        label = f"{icon} {svc}"
+                        if raw in ["No internet service", "No phone service"]:
+                            status_display = "➖ N/A"
+                        elif raw == "No":
+                            status_display = "❌ Inactive"
+                        elif svc == "Internet Service":
+                            status_display = f"✅ {raw}"
                         else:
-                            # Inactive Service Badge
-                            badge_html = f"<span style='background-color: #fef2f2; color: #991b1b; padding: 2px 8px; border-radius: 4px; font-size: 0.85rem; margin-right: 8px;'>Inactive</span>"
-                            label_html = f"<span style='color: #475569;'>{svc}</span>"
-                        
-                        st.markdown(f"<div style='margin-bottom: 6px;'>{badge_html} {label_html}</div>", unsafe_allow_html=True)
-                
-                # Rule-based localized account insights
-                st.markdown("---")
-                st.markdown("#### 💡 Customer Account Health & Retention Insights")
-                
+                            status_display = "✅ Active"
+                        svc_names.append(label)
+                        svc_statuses.append(status_display)
+
+                    st.dataframe(
+                        {"Service": svc_names, "Status": svc_statuses},
+                        use_container_width=True,
+                        hide_index=True,
+                    )
+
+                # ── Financial KPI Metrics ──────────────────────────────────
+                st.divider()
+                st.markdown("#### 💰 Account Financial Snapshot")
+                m1, m2, m3 = st.columns(3)
+                with m1:
+                    st.metric("📅 Tenure", f"{customer['tenure']} months")
+                with m2:
+                    st.metric("💵 Monthly Charges", f"${customer['MonthlyCharges']:.2f}")
+                with m3:
+                    st.metric("🧾 Total Charges", total_ch_str)
+
+                # ── Retention Insights ─────────────────────────────────────
+                st.divider()
+                st.markdown("#### 💡 Account Health & Retention Insights")
+
                 if not is_churned:
                     insights_list = []
                     if customer["Contract"] == "Month-to-month":
-                        insights_list.append("⚠️ **Contract Vulnerability:** This customer is on a month-to-month subscription. Consider shifting them to a 1-year or 2-year contract to lower churn risk.")
+                        insights_list.append("⚠️ **Contract Vulnerability:** On a month-to-month plan — consider shifting to a 1-year or 2-year contract to reduce churn risk.")
                     if customer["PaymentMethod"] == "Electronic check":
-                        insights_list.append("⚠️ **Payment Method Attrition:** Customer uses Electronic Check. Transitioning them to automated credit card/bank transfer options is highly recommended.")
+                        insights_list.append("⚠️ **Payment Risk:** Uses Electronic Check. Automated credit card or bank transfer is strongly recommended.")
                     if customer["InternetService"] == "Fiber optic":
-                        insights_list.append("⚠️ **High Churn Fiber optic segment:** Premium fiber subscriptions exhibit high churn rates. Keep pricing competitive and monitor service performance.")
+                        insights_list.append("⚠️ **Fiber optic Churn Risk:** Premium fiber subscribers show elevated churn. Monitor service quality and pricing competitiveness.")
                     if customer["tenure"] < 12:
-                        insights_list.append("⚠️ **Early Lifecycle Phase:** Customer is in their first 12 months. Early onboarding support and custom discounts could stabilize long-term retention.")
-                    
+                        insights_list.append("⚠️ **Early Lifecycle:** First 12 months — early onboarding support and discounts can stabilize long-term retention.")
+
                     if not insights_list:
-                        st.success("✅ **Robust Loyalty Profile:** The customer's account settings (long-term contract, automatic payments, and high tenure) align with the lowest historic risk cohorts.")
+                        st.success("✅ **Robust Loyalty Profile:** Long-term contract, automatic payments, and high tenure — this customer aligns with the lowest churn-risk cohort.")
                     else:
                         for insight in insights_list:
-                            st.markdown(insight)
+                            st.warning(insight)
                 else:
                     st.info(
                         "ℹ️ **Historical Study Note:** This customer has already churned. "
-                        "Examine their profile details to understand overlapping risk factor patterns (e.g. Month-to-month contract, short tenure, etc.) "
-                        "and configure predictive defenses for similar active profiles."
+                        "Review their profile to identify overlapping risk factors (e.g. month-to-month contract, short tenure) "
+                        "and apply targeted defences to similar active customers."
                     )

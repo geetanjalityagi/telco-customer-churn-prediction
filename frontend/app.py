@@ -5,7 +5,7 @@ from components.charts import churn_distribution_chart, contract_distribution_ch
 
 st.set_page_config(
     page_title="Customer Churn Intelligence Platform",
-    page_icon="📊",
+    page_icon="🏠",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -27,7 +27,7 @@ def load_dashboard_data():
 
 dashboard_data = load_dashboard_data()
 
-st.title("📊 Dashboard Overview")
+st.title("🏠 Dashboard Overview")
 st.divider()
 
 if dashboard_data and "kpis" in dashboard_data:

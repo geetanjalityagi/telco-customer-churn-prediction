@@ -6,7 +6,7 @@ PAGES = {
     "Dashboard": "app.py",
     "Single Prediction": "pages/1_Single_Prediction.py",
     "Batch Prediction": "pages/2_Batch_Prediction.py",
-    "Customer Analytics": "pages/4_Customer_Analytics.py",
+    "Customer Explorer": "pages/4_Customer_Explorer.py",
     "Model Performance": "pages/5_Model_Performance.py"
 }
 
@@ -34,7 +34,7 @@ def render_sidebar(active: str = "Dashboard"):
                    "lightbulb", "bar-chart", "clock-history"],
             default_index=list(PAGES.keys()).index(active),
             styles={
-                "container": {"background-color": "#0f1116"},
+                # "container": {"background-color": "#0f1116"},
                 "nav-link-selected": {"background-color": "#2f6fed"},
             },
         )

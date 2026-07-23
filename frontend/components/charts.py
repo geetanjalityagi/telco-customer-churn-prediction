@@ -23,8 +23,8 @@ def churn_distribution_chart():
     churn_distribution = dashboard_data["charts"]["churn_distribution"]
 
     df_churn = pd.DataFrame({
-    "Churn": list(churn_distribution.keys()),
-    "Customers": list(churn_distribution.values())
+        "Churn": list(churn_distribution.keys()),
+        "Customers": list(churn_distribution.values())
     })
 
     fig = px.pie(
@@ -32,7 +32,9 @@ def churn_distribution_chart():
         names="Churn",
         values="Customers",
         hole=0.5,
-        title="Customer Churn Distribution"
+        title="Customer Churn Distribution",
+        color="Churn",
+        color_discrete_map={"Yes": "#ef5350"} 
     )
 
     st.plotly_chart(fig, use_container_width=True)
@@ -49,7 +51,8 @@ def contract_distribution_chart():
     x="Contract Type",
     y="Customers",
     title="Customer Distribution by Contract Type",
-    text="Customers"
+    text="Customers",
+    color="Contract Type"
 )
 
     fig.update_traces(
@@ -87,7 +90,8 @@ def contract_vs_churn_chart():
     color="Churn",
     barmode="group",
     text="Churn Rate (%)",
-    title="Churn Rate by Contract Type"
+    title="Churn Rate by Contract Type",
+    color_discrete_map={"Yes": "#ef5350"}
 )
 
     fig.update_traces(
@@ -126,7 +130,8 @@ def internet_vs_churn_chart():
     color="Churn",
     barmode="group",
     text="Churn Rate (%)",
-    title="Which Internet Services are risky?"
+    title="Which Internet Services are risky?",
+    color_discrete_map={"Yes": "#ef5350"}
 )
 
     fig.update_traces(
@@ -165,7 +170,8 @@ def payment_vs_churn_chart():
     color="Churn",
     barmode="group",
     text="Churn Rate (%)",
-    title="Churn Rate by Payment Method"
+    title="Churn Rate by Payment Method",
+    color_discrete_map={"Yes": "#ef5350"}
 )
 
     fig.update_traces(
@@ -196,7 +202,8 @@ def tenure_distribution_chart():
         x="Churn",
         y="Tenure (Months)",
         color="Churn",
-        title="Tenure Distribution by Churn"
+        title="Tenure Distribution by Churn",
+        color_discrete_map={"Yes": "#ef5350"}
     )
 
     st.plotly_chart(fig, use_container_width=True)

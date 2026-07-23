@@ -18,7 +18,8 @@ def insights_tab(df):
                 hole=0.4,
                 title="Churn Status Distribution",
                 color="Status",
-                color_discrete_map={"Churned": "#ef5350", "Retained": "#66bb6a"}
+                color_discrete_map={"Churned": "#ef5350"} 
+                #   , "Retained": "#66bb6a"}
             )
         fig_pie.update_layout(height=350, margin=dict(l=20, r=20, t=40, b=20))
 
@@ -36,7 +37,8 @@ def insights_tab(df):
             color="Churn",
             barmode="group",
             title="Churn by Contract Type",
-            color_discrete_map={"Churned": "#ef5350", "Retained": "#66bb6a"}
+            color_discrete_map={"Churned": "#ef5350"} 
+            # color_discrete_map={"Churned": "#ef5350", "Retained": "#66bb6a"}
         )
         fig_contract.update_layout(
             height=350, 
@@ -57,7 +59,8 @@ def insights_tab(df):
             y="MonthlyCharges",
             color="Churn",
             title="Monthly Charges vs Churn Status",
-            color_discrete_map={"Yes": "#ef5350", "No": "#66bb6a"},
+            color_discrete_map={"Churned": "#ef5350"},
+            # color_discrete_map={"Yes": "#ef5350", "No": "#66bb6a"},
             labels={"Churn": "Churned?"}
         )
         fig_box_charge.update_layout(
@@ -75,7 +78,8 @@ def insights_tab(df):
             y="tenure",
             color="Churn",
             title="Tenure (Months) vs Churn Status",
-            color_discrete_map={"Yes": "#ef5350", "No": "#66bb6a"},
+            color_discrete_map={"Churned": "#ef5350"},
+            # color_discrete_map={"Yes": "#ef5350", "No": "#66bb6a"},
             labels={"Churn": "Churned?"}
         )
         fig_box_tenure.update_layout(
@@ -99,7 +103,8 @@ def insights_tab(df):
             color="Churn",
             barmode="group",
             title="Churn by Payment Method",
-            color_discrete_map={"Churned": "#ef5350", "Retained": "#66bb6a"}
+            color_discrete_map={"Churned": "#ef5350"} 
+            # color_discrete_map={"Churned": "#ef5350", "Retained": "#66bb6a"}
         )
         fig_payment.update_layout(
             height=350, 
@@ -120,6 +125,7 @@ def insights_tab(df):
             color="Churn",
             barmode="group",
             title="Churn by Internet Service",
+            color_discrete_map={"Churned": "#ef5350"} 
             # color_discrete_map={"Churned": "#ef5350", "Retained": "#66bb6a"}
         )
         fig_internet.update_layout(

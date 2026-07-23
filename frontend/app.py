@@ -15,7 +15,7 @@ render_sidebar()
 API_BASE_URL = "http://localhost:8000/api/v1"
 DASHBOARD_URL = f"{API_BASE_URL}/dashboard"
 
-@st.cache_data(ttl=300)
+@st.cache_data(ttl=200)
 def load_dashboard_data():
     try:
         response = requests.get(DASHBOARD_URL)

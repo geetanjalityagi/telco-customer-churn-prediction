@@ -29,8 +29,8 @@ if filtered_records == 0:
 else:
     # ── Organize Interface with Tabs ──────────────────────────────────────────
     tab_overview, tab_table, tab_lookup = st.tabs([
-        "📊 Cohort Overview & Stats",
-        "📋 Cohort Data Table",
+        "📊 Overview & Stats",
+        "📋 Data Table",
         "🔍 Individual Customer Lookup"
     ])
     
@@ -72,12 +72,12 @@ else:
             )
             
         st.divider()
-        st.markdown("### 📊 Cohort Distributions")
+        st.markdown("### 📊 Distributions")
         insights_tab(filtered_df)
         
     # ── TAB 2: COHORT DATA TABLE ──────────────────────────────────────────────
     with tab_table:
-        st.markdown("### 📋 Cohort Records & Export")
+        st.markdown("### 📋 Records & Export")
         st.markdown(
             "Below is the complete tabular list of customers within the active filtered cohort. "
             "You can sort, filter, and search directly within the interactive table, or download it as a CSV."

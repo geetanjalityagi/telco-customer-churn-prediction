@@ -188,7 +188,7 @@ def explain_batch_file_predictions(
 
     # For missing TotalCharges (e.g. tenure == 0 where TotalCharges was ' '), fill with tenure * MonthlyCharges
     if "TotalCharges" in df.columns and "MonthlyCharges" in df.columns and "tenure" in df.columns:
-        df["TotalCharges"] = df["TotalCharges"].fillna(df["tenure"] * df["MonthlyCharges"]).fillna(0.0)
+        df["TotalCharges"] = df["TotalCharges"].fillna(df["MonthlyCharges"]).fillna(0.0)
     elif "TotalCharges" in df.columns:
         df["TotalCharges"] = df["TotalCharges"].fillna(0.0)
 

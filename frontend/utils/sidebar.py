@@ -5,8 +5,8 @@ from streamlit_option_menu import option_menu
 PAGES = {
     "Dashboard": "app.py",
     "Single Prediction": "pages/1_Single_Prediction.py",
-    "Customer Explorer": "pages/4_Customer_Explorer.py",
-    "Model Performance": "pages/5_Model_Performance.py"
+    "Customer Explorer": "pages/2_Customer_Explorer.py",
+    "Model Performance": "pages/3_Model_Performance.py"
 }
 
 def render_sidebar(active: str = "Dashboard"):

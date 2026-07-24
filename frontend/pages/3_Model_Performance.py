@@ -32,18 +32,20 @@ except requests.exceptions.HTTPError as e:
  
 perf = info["test_performance"]
 
-st.markdown("### Model Summary")
-c1, c2 = st.columns(2)
-with c1:
-    st.markdown(f"**Model type**  \n{info['model_type']}")
-    st.markdown(f"**Target column**  \n`{info['target_column']}`")
-with c2:
-    saved_on = info.get("saved_on", "")
-    try:
-        saved_on_fmt = datetime.fromisoformat(saved_on).strftime("%b %d, %Y — %H:%M")
-    except ValueError:
-        saved_on_fmt = saved_on
-    st.markdown(f"**Last trained / saved**  \n{saved_on_fmt}")
-    st.markdown(f"**Features used**  \n{len(info['feature_columns'])} columns")
- 
-st.divider()
+col1, col2, col3, col4 = st.columns(4)
+
+with col1:
+    st.markdown("Model Type")
+    st.write(info.get("model_type").split(" ")[0])
+
+with col2:
+    st.markdown("Accuracy")
+    st.write(f"{info.get("test_performance")["accuracy"]:.2f}")
+
+with col3:
+    st.markdown("F1 score")
+    st.write(f"{info.get("test_performance")["macro_f1"]:.2f}")
+
+with col4:
+    st.markdown("ROC Score")
+    st.write(f"{info.get("test_performance")["roc_auc"]:.2f}")

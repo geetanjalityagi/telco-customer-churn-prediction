@@ -26,8 +26,6 @@ def filter_data(df):
         unsafe_allow_html=True
     )
 
-    # ── Seed session state defaults only on very first load ──────────────────
-    # This ensures Streamlit never resets a user's selection on re-run.
     if "gender_multiselect" not in st.session_state:
         st.session_state["gender_multiselect"]     = sorted(original_df["gender"].unique().tolist())
         st.session_state["contract_multiselect"]   = sorted(original_df["Contract"].unique().tolist())
@@ -101,4 +99,4 @@ def filter_data(df):
         )
         df = df[(df["tenure"] >= tenure_range[0]) & (df["tenure"] <= tenure_range[1])]
 
-    return df
+    return df

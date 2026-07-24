@@ -1,10 +1,11 @@
 from pydantic import BaseModel
-from typing import Literal
 
 class TestPerformance(BaseModel):
     accuracy: float
     macro_f1: float
     roc_auc: float
+    precision: float
+    recall: float
 
 class ModelPerformanceResponse(BaseModel):
  

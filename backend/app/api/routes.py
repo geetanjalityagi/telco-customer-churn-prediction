@@ -4,7 +4,8 @@ from fastapi import APIRouter, HTTPException
 
 from app.core.model_loader import get_model_bundle
 from app.schemas.request import CustomerInput
-from app.schemas.response import ChurnPredictionResponse, ModelPerformanceResponse
+from app.schemas.response import ChurnPredictionResponse
+from app.schemas.model_performance_schema import ModelPerformanceResponse
 from app.services.prediction_service import explain_prediction
 from app.schemas.dashboard_schema import DashboardResponse
 from app.services.dashboard import dashboard_data

@@ -1,20 +1,6 @@
 from pydantic import BaseModel
 from typing import Literal
 
-class TestPerformance(BaseModel):
-    accuracy: float
-    macro_f1: float
-    roc_auc: float
-
-class ModelPerformanceResponse(BaseModel):
- 
-    model_type: str
-    chosen_threshold: float
-    target_recall_used_for_threshold: float
-    test_performance: TestPerformance
-    feature_columns: list[str]
-    target_column: str
-    saved_on: str
 
 class RiskFactor(BaseModel):
     feature: str
@@ -37,8 +23,3 @@ class ChurnPredictionResponse(BaseModel):
     business_interpretation: str
     recommended_actions: list[str]
 
-class BatchChurnPredictionResponse(BaseModel):
-    total_customers: int
-    predicted_churn_count: int
-    churn_rate: float
-    predictions: list[ChurnPredictionResponse]

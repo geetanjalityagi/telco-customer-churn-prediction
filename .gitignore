@@ -1,22 +1,49 @@
+# ML Models & Pickles
+*.pkl
+*.joblib
+models/
+backend/models_artifacts/
+
 # Virtual Environment
 venv/
 .venv/
+env/
+ENV/
+bin/
+include/
+lib/
+share/
 
-# Python Cache
+# Python Cache & Bytecode
 __pycache__/
 *.py[cod]
+*$py.class
+.pytest_cache/
 
 # Environment Variables
 .env
+.env.*
 
-# Jupyter Notebook
+# Jupyter Notebook Checkpoints
 .ipynb_checkpoints/
+*/.ipynb_checkpoints/
 
-# VS Code
+# VS Code & IDEs
 .vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
 
-# OS Files
+# Streamlit Local Files
+.streamlit/config.toml
+.streamlit/secrets.toml
+
+# OS & Temp Files
 Thumbs.db
+.DS_Store
 
 # Logs
 *.log

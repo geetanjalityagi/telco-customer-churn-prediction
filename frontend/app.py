@@ -35,21 +35,61 @@ if dashboard_data and "kpis" in dashboard_data:
     
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.metric(label="Total Customers", value=kpis.get("total_customers", "N/A"))
+        with st.container(border=True):
+            val = kpis.get("total_customers", 0)
+            st.metric(
+                label="👥 Total Customers",
+                value=f"{val:,}" if isinstance(val, (int, float)) else val
+            )
+            st.caption("Active client accounts in the database")
+            
     with col2:
-        st.metric(label="Churn Rate", value=kpis.get("churn_rate", "N/A"))
+        with st.container(border=True):
+            val = kpis.get("churn_rate", 0)
+            st.metric(
+                label="🚨 Churn Rate",
+                value=f"{val:.2f}%" if isinstance(val, (int, float)) else val
+            )
+            st.caption("Percentage of historical customers lost")
+            
     with col3:
-        st.metric(label="High Risk Customers", value=kpis.get("high_risk_customers", "N/A"))
+        with st.container(border=True):
+            val = kpis.get("high_risk_customers", 0)
+            st.metric(
+                label="⚠️ High Risk Accounts",
+                value=f"{val:,}" if isinstance(val, (int, float)) else val
+            )
+            st.caption("Customers flagged at risk of churn by model")
 
     st.write("")
 
     col4, col5, col6 = st.columns(3)
     with col4:
-        st.metric(label="Average Tenure", value=kpis.get("average_tenure", "N/A"))
+        with st.container(border=True):
+            val = kpis.get("average_tenure", 0)
+            st.metric(
+                label="⏳ Average Tenure",
+                value=f"{val:.1f} months" if isinstance(val, (int, float)) else val
+            )
+            st.caption("Mean duration of customer relationship")
+            
     with col5:
-        st.metric(label="Average Monthly Charges", value=kpis.get("average_monthly_charges", "N/A"))
+        with st.container(border=True):
+            val = kpis.get("average_monthly_charges", 0)
+            st.metric(
+                label="💳 Avg Monthly Charge",
+                value=f"${val:,.2f}" if isinstance(val, (int, float)) else val
+            )
+            st.caption("Average billing amount per customer")
+            
     with col6:
-        st.metric(label="Revenue at Risk", value=kpis.get("revenue_at_risk", "N/A"))
+        with st.container(border=True):
+            val = kpis.get("revenue_at_risk", 0)
+            st.metric(
+                label="💰 Revenue at Risk",
+                value=f"${val:,.2f}" if isinstance(val, (int, float)) else val
+            )
+            st.caption("Monthly billing of high-risk accounts")
 else:
     st.info("No dashboard data available to display.")
 

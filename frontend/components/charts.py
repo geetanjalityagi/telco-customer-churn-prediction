@@ -217,7 +217,8 @@ def monthly_charges_chart():
         x="MonthlyCharges",
         nbins=30,
         title="Monthly Charges Distribution",
-        marginal="box"
+        marginal="box",
+        color_discrete_sequence=["#2f6fed"]
     )
 
     fig.update_layout(

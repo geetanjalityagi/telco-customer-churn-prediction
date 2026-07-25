@@ -135,6 +135,33 @@ with tab1:
         else:
             st.info("No text performance report file found.")
 
+    st.write("")
+    st.markdown("---")
+    st.subheader("💡 Key Takeaways from Classification Performance")
+    
+    col_sum1, col_sum2 = st.columns(2, gap="large")
+    with col_sum1:
+        st.markdown("#### 📊 Confusion Matrix Insights")
+        st.markdown(
+            """
+            * **True Negatives (802):** The model correctly identified 802 customers who did not churn. This represents a solid baseline classification accuracy for loyal customers.
+            * **True Positives (278):** The model correctly captured 278 customers who actually churned, allowing proactive retention efforts for these accounts.
+            * **False Positives (231):** 231 customers were flagged as high risk but stayed. While this is a false alarm, it typically leads to customer outreach/offers which can strengthen relations anyway.
+            * **False Negatives (94):** The model missed 94 churning customers. Because the cost of a missed churner is high, minimizing this number (maximizing Recall) was prioritized.
+            """
+        )
+        
+    with col_sum2:
+        st.markdown("#### 🎯 Classification Report Analysis")
+        st.markdown(
+            """
+            * **Class 1 (Churned) Recall (75%):** Out of all customers who actually churned, the model successfully flags **75%** of them. This meets our business goal of catching the vast majority of churn risks.
+            * **Class 1 (Churned) Precision (55%):** When the model predicts a customer will churn, there is a **55%** probability they actually do. This suggests that marketing campaigns targeting predicted churners will have a conversion rate of over half.
+            * **Class 0 (Retained) Precision (90%):** If the model predicts a customer will stay, it is correct **90%** of the time. This is highly reliable for identifying healthy accounts.
+            * **Overall Macro F1-Score (73%):** Reflects a balanced evaluation across both classes, ensuring the model performs well on both groups despite the class imbalance.
+            """
+        )
+
 with tab2:
     st.subheader("Feature Importance")
     st.write(

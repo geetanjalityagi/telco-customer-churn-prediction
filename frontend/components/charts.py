@@ -51,8 +51,7 @@ def contract_distribution_chart():
     x="Contract Type",
     y="Customers",
     title="Customer Distribution by Contract Type",
-    text="Customers",
-    color="Contract Type"
+    text="Customers"
 )
 
     fig.update_traces(

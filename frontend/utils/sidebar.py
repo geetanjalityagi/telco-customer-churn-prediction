@@ -20,15 +20,13 @@ def render_sidebar(active: str = "Dashboard"):
             unsafe_allow_html=True,
         )
 
-        st.markdown(
-            '<div class="sidebar-logo-title"><h1>Customer Churn<br>Intelligence Platform</h1></div>',
-            unsafe_allow_html=True,
-        )
+        st.title("🔮 Customer Churn Intelligence Platform")
+        st.caption("Predictive Analytics Platform")
+
         selected_option = option_menu(
             menu_title=None,
             options=list(PAGES.keys()),
-            icons=["house", "person-check", "layers", "graph-up",
-                   "lightbulb", "bar-chart", "clock-history"],
+            icons=["house", "person-check", "layers", "graph-up"],
             default_index=list(PAGES.keys()).index(active),
             styles={
                 "nav-link-selected": {"background-color": "#2f6fed"},

@@ -11,7 +11,6 @@ PAGES = {
 
 def render_sidebar(active: str = "Dashboard"):
     with st.sidebar:
-        # Hide default Streamlit sidebar navigation
         st.markdown(
             """
             <style>
@@ -25,7 +24,6 @@ def render_sidebar(active: str = "Dashboard"):
             '<div class="sidebar-logo-title"><h1>Customer Churn<br>Intelligence Platform</h1></div>',
             unsafe_allow_html=True,
         )
-        # st.markdown("""**Customer Churn**\nIntelligence Platform""")
         selected_option = option_menu(
             menu_title=None,
             options=list(PAGES.keys()),
@@ -33,7 +31,6 @@ def render_sidebar(active: str = "Dashboard"):
                    "lightbulb", "bar-chart", "clock-history"],
             default_index=list(PAGES.keys()).index(active),
             styles={
-                # "container": {"background-color": "#0f1116"},
                 "nav-link-selected": {"background-color": "#2f6fed"},
             },
         )

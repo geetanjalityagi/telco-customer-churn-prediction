@@ -119,7 +119,7 @@ tab1, tab2, tab3 = st.tabs([
 ])
 
 with tab1:
-    col_img, col_txt = st.columns([1.2, 1.0], gap="large")
+    col_img, col_txt = st.columns([1.0, 1.2])
     with col_img:
         st.subheader("Confusion Matrix")
         matrix_img_path = FRONTEND_DIR / "images" / "confusion_matrix.png"
@@ -168,3 +168,30 @@ with tab3:
             st.image(str(waterfall_img_path), caption="SHAP Waterfall Plot for a Representative Sample", use_container_width=True)
         else:
             st.warning("SHAP waterfall plot image not found.")
+
+    st.write("")
+    st.markdown("---")
+    st.subheader("💡 Key Takeaways from SHAP Interpretability")
+    
+    col_inf1, col_inf2 = st.columns(2, gap="large")
+    with col_inf1:
+        st.markdown("#### 🚨 Primary Churn Drivers (Increases Churn Risk)")
+        st.markdown(
+            """
+            * **Month-to-Month Contracts:** Month-to-month contracts are the single most dominant factor driving churn risk. Transitioning customers to 1- or 2-year commitments is the most effective retention strategy.
+            * **Fiber Optic Internet:** Customers with Fiber Optic service exhibit highly elevated churn risk, potentially pointing to issues with service quality, reliability, or high pricing.
+            * **Short Tenure:** Newly acquired customers in their first few months are highly vulnerable to churning, necessitating targeted retention outreach.
+            * **Electronic Check Payments:** Paying by electronic check is strongly correlated with higher churn, whereas automated billing methods (credit card or bank transfer) favor retention.
+            """
+        )
+        
+    with col_inf2:
+        st.markdown("#### 🛡️ Key Retention Drivers (Decreases Churn Risk)")
+        st.markdown(
+            """
+            * **Long-Term Contracts:** One-year and two-year contracts act as the strongest anchors against churn.
+            * **Tech Support & Online Security Add-ons:** Customers who utilize tech support or online security options have substantially lower churn rates, proving that service utility add-ons build customer stickiness.
+            * **High Customer Tenure:** Retention probability increases significantly as tenure grows, illustrating the value of long-term loyalty.
+            * **No Broadband Internet Service:** Customers with voice-only connections (no internet service packages) exhibit extremely low churn rates and high customer stability.
+            """
+        )

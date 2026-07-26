@@ -82,7 +82,7 @@ def charts_info():
         .groupby(["Contract", "PaymentMethod"])["Churn"]
         .mean()
         .mul(100)
-        .round(1)
+        .round(2)
         .unstack(fill_value=0)
         .to_dict(orient="index")
     )

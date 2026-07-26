@@ -4,7 +4,6 @@ from app.schemas.dashboard_schema import KPIs, Charts, DashboardResponse
 from app.core.model_loader import get_model_bundle
 from app.services.prediction_service import BINARY_COLS
 
-# Resolve data path relative to backend root directory
 BACKEND_DIR = Path(__file__).resolve().parent.parent.parent
 DATA_PATH = BACKEND_DIR / "data" / "processed.csv"
 

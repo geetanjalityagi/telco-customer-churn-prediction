@@ -1,3 +1,4 @@
+import os
 import requests
 import streamlit as st
 from utils.sidebar import render_sidebar
@@ -12,7 +13,7 @@ st.set_page_config(
 
 render_sidebar()
 
-API_BASE_URL = "http://localhost:8000/api/v1"
+API_BASE_URL = os.getenv("CHURN_API_URL", "http://localhost:8000/api/v1")
 DASHBOARD_URL = f"{API_BASE_URL}/dashboard"
 
 @st.cache_data(ttl=200)

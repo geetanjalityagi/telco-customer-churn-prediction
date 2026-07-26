@@ -6,7 +6,9 @@ import requests
 st.set_page_config(page_title="Single Prediction",page_icon="🧠", layout="wide")
 render_sidebar("Single Prediction")
 
-API_BASE_URL = os.getenv("CHURN_API_URL", "http://localhost:8000/api/v1")
+API_BASE_URL = os.getenv("CHURN_API_URL", "http://localhost:8000/api/v1").rstrip("/")
+if not API_BASE_URL.endswith("/api/v1"):
+    API_BASE_URL = API_BASE_URL + "/api/v1"
 PREDICT_URL = f"{API_BASE_URL}/predict"
 
 RISK_COLOR = {

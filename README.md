@@ -22,7 +22,7 @@ Customer_Churn_Prediction/
 │   │   │   ├── config.py                # Settings, CORS, and paths configuration
 │   │   │   └── model_loader.py          # ModelBundle loads XGBoost, preprocessor, and TreeExplainer
 │   │   ├── schemas/                     # Pydantic validation models
-│   │   │   ├── request.py               # CustomerInput (validation) and BatchCustomerInput
+│   │   │   ├── request.py               # CustomerInput (validation) 
 │   │   │   ├── response.py              # ChurnPredictionResponse & RiskFactor schemas
 │   │   │   ├── dashboard_schema.py      # Aggregates structures for the frontend
 │   │   │   └── model_performance_schema.py

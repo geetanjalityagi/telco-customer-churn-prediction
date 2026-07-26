@@ -1,3 +1,4 @@
+from pathlib import Path
 import streamlit as st
 import pandas as pd
 from utils.sidebar import render_sidebar
@@ -7,7 +8,11 @@ from components.insights import insights_tab
 st.set_page_config(page_title="Customer Explorer", page_icon="🔍", layout="wide")
 render_sidebar("Customer Explorer")
 
-df = pd.read_csv("data/processed.csv")
+# Resolve path relative to this file's location to prevent CWD issues in cloud hosting
+CURRENT_DIR = Path(__file__).resolve().parent
+DATA_PATH = CURRENT_DIR.parent / "data" / "processed.csv"
+
+df = pd.read_csv(DATA_PATH)
 total_records = len(df)
 
 st.title("🔍 Customer Explorer")

@@ -1,9 +1,14 @@
+from pathlib import Path
 import pandas as pd
 from app.schemas.dashboard_schema import KPIs, Charts, DashboardResponse
 from app.core.model_loader import get_model_bundle
 from app.services.prediction_service import BINARY_COLS
 
-df = pd.read_csv("data/processed.csv")
+# Resolve data path relative to backend root directory
+BACKEND_DIR = Path(__file__).resolve().parent.parent.parent
+DATA_PATH = BACKEND_DIR / "data" / "processed.csv"
+
+df = pd.read_csv(DATA_PATH)
 
 try:
     bundle = get_model_bundle()
